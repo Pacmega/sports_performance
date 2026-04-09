@@ -1,0 +1,22 @@
+[project]
+name = "sports-performance"
+version = "0.1.0"
+description = "Sports performance analysis tool"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["ruff", "pytest"]
+
+[project.scripts]
+sports-perf = "sports_performance.cli:main"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
