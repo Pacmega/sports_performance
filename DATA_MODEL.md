@@ -7,7 +7,8 @@ Fill in these sections based on your specific needs.
 ## Race Events
 
 What types of races do you need to support?
-- [ ] Running (5K, 10K, half marathon, marathon, ultra)
+- [x] Road running (5K, 10K, half marathon, marathon)
+- [x] Trail running (5K, 10K, half marathon, marathon, ultra)
 - [ ] Cycling (road, mountain bike, gravel)
 - [ ] Swimming
 - [ ] Triathlon
@@ -23,14 +24,15 @@ What types of races do you need to support?
 | location | string | No | City, region, country |
 | discipline | enum | Yes | running, cycling, swimming, triathlon |
 | distance | float | Yes | Distance in meters |
-| distance_unit | enum | Yes | km, miles |
+| elevation_gain | float | No | Elevation gain in meters |
 | surface | enum | No | road, trail, track, gravel |
 
 ### Data Sources
 
 Which websites/APIs will you scrape?
-- [ ] Official race timing websites (list which)
-- [ ] Race result aggregators (e.g., Athlinks, Sportstats)
+- [x] Official race timing websites (utmb.world)
+- [x] Race result aggregators (my.raceresult.com, runagain.com)
+- [x] Official race websites for specific events (e.g. www.swissalps100.com/results.asp)
 - [ ] Strava segments
 - [ ] Other: _______________
 
@@ -43,13 +45,13 @@ Which websites/APIs will you scrape?
 | Field | Type | Required? | Description |
 |-------|------|-----------|-------------|
 | athlete_id | string | Yes | Unique identifier |
-| name | string | No | Full name (may be anonymous) |
+| name | string | Yes | Full name (may be anonymous) |
 | age | int | No | Age at time of race |
-| gender | enum | No | male, female, non-binary |
+| gender | enum | No | M, F, X |
 | hometown | string | No | Location |
 
 ### How do you identify athletes?
-- [ ] By name (prone to duplicates)
+- [x] By name
 - [ ] By timing platform ID
 - [ ] By Strava/connected account
 - [ ] Other: _______________
@@ -66,19 +68,19 @@ Which websites/APIs will you scrape?
 | race_id | string | Yes | Foreign key to race |
 | athlete_id | string | Yes | Foreign key to athlete |
 | position | int | Yes | Overall finish position |
-| division | string | No | Age group, gender division |
+| gender | string | No | Gender (M/F/X)
+| age_group_lower | int | No | Age group, lower bound |
+| age_group_upper | int | No | Age group, upper bound |
 | division_position | int | No | Position within division |
 | finish_time | duration | Yes | Total time (HH:MM:SS) |
-| split_times | array | No | Intermediate splits |
-| pace | float | No | Average pace (min/km or min/mi) |
+| pace | float | No | Average pace (min/km) |
 | DNF/DNS | boolean | No | Did not finish/start |
 
 ### Missing Data Handling
 
 What do you do when:
-- Splits are missing: _______________
-- Division info is missing: _______________
-- Duplicate results: _______________
+- Division info is missing: Leave blank, only use this result for calculations where division is not used
+- Duplicate results: Deduplicate, store only one of the results
 
 ---
 
@@ -98,15 +100,15 @@ What do you do when:
 | Target | Example Use Case |
 |--------|------------------|
 | Top 1% | Elite qualifier |
-| Top 10% | Age group podium |
-| Top 25% | Top quarter finish |
+| Top 40% | Absolute best case |
+| Top 45% | Strong performance, top half finish |
 | Top 50% | Above average |
+| Top 55% | Solid performance |
 
 ### Reference Data Needed
 
-- Age grading tables for running/cycling?
+- Age grading tables for running?
 - Equivalent performance calculators (Riegel, Cameron)?
-- Course-specific adjustments?
 
 ---
 
@@ -116,15 +118,15 @@ What do you do when:
 
 - [ ] SQLite (local, simple)
 - [ ] PostgreSQL (production)
-- [ ] CSV/JSON files (flat files)
+- [x] CSV/JSON files (flat files)
 - [ ] In-memory only (no persistence)
 - [ ] Other: _______________
 
 ### Data Retention
 
-- Keep all historical data? Yes / No
-- Archive old races after X years? _______________
-- Purge duplicates how? _______________
+- Keep all historical data? Yes
+- Archive old races after X years? Do not implement archiving (yet)
+- Purge duplicates how? De-duplicate and merge results
 
 ---
 
@@ -132,9 +134,9 @@ What do you do when:
 
 | Integration | Purpose | Priority |
 |-------------|---------|----------|
-| Strava | Import activities | High / Medium / Low |
-| Race timing APIs | Fetch results | High / Medium / Low |
-| Weather data | Correlate performance | High / Medium / Low |
+| Race timing APIs | Fetch results | High |
+| Strava | Search race results and training history | Low |
+| Weather data | Correlate performance | Low |
 | Other | | |
 
 ---

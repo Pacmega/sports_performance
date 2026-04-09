@@ -3,8 +3,9 @@
 ## Setup
 
 - **Package manager**: uv (not pip/poetry)
-- **Run commands**: `uv sync`, `uv run <script>`, `uv pip install <package>`
+- **Sync environment**: `uv sync`
 - **Add dependencies**: `uv add <package>` or `uv add --dev <package>`
+- **Run scripts**: `uv run <script>`
 
 ## Development
 

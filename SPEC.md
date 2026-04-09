@@ -9,11 +9,12 @@ A data science tool for sports performance analysis, starting with CLI and later
 ### 1. Race Result Scraping
 - Scrape race results from web sources
 - Parse and normalize data from various formats
+- Store data for race results in csv format per race
 - Handle pagination, rate limiting, and error cases
 
 ### 2. Expected Finishing Time Calculations
 - Calculate expected finishing times based on historical data
-- Determine percentile rankings (e.g., "top 10% of finishers")
+- Determine percentile rankings (e.g., "top 45-50-55% of finishers")
 - Provide target times for desired performance levels
 
 ## Architecture
@@ -36,6 +37,6 @@ A data science tool for sports performance analysis, starting with CLI and later
 ## Out of Scope (MVP)
 
 - User authentication
-- Database persistence
+- Data storage categorized in different categories
 - Real-time updates
 - Mobile support
