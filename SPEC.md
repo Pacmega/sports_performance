@@ -19,14 +19,15 @@ A data science tool for sports performance analysis, starting with CLI and later
 
 ## Tech Stack
 
-| Concern | Library | Notes |
-| --- | --- | --- |
-| HTTP client | `httpx` | Sync and async; nearly identical API to `requests` |
-| HTML parsing | `selectolax` | CSS selectors; needed for UTMB and direct race sites |
-| Data validation | `pydantic` | Typed models for Race, Athlete, RaceResult |
-| CLI framework | `typer` | Built on `click`; subcommands and `--help` for free |
-| Data analysis | `polars` | Deferred until cross-race aggregate analytics are needed |
-| Packaging | `uv` + `ruff` | Already in use |
+| Concern         | Library       | Notes                                                    |
+| --------------- | ------------- | -------------------------------------------------------- |
+| HTTP client     | `httpx`       | Sync and async; nearly identical API to `requests`       |
+| HTML parsing    | `selectolax`  | CSS selectors; needed for UTMB and direct race sites     |
+| Data validation | `pydantic`    | Typed models for Race, Athlete, RaceResult               |
+| CLI framework   | `typer`       | Built on `click`; subcommands and `--help` for free      |
+| Data analysis   | `polars`      | Deferred until cross-race aggregate analytics are needed |
+| Packaging       | `uv` + `ruff` | Already in use                                           |
+| Testing         | `pytest`      | Standard for unit testing                                |
 
 **Initial data source**: `my.raceresult.com` — serves JSON via API, so no HTML parsing needed for the first scraper.
 
