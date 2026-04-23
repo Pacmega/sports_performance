@@ -16,16 +16,16 @@ What types of races do you need to support?
 
 ### Race Entity Fields
 
-| Field | Type | Required? | Description |
-|-------|------|-----------|-------------|
-| event_id | string | Yes | Unique identifier |
-| name | string | Yes | Event name |
-| date | date | Yes | Event date |
-| location | string | No | City, region, country |
-| discipline | enum | Yes | running, cycling, swimming, triathlon |
-| distance | float | Yes | Distance in meters |
-| elevation_gain | float | No | Elevation gain in meters |
-| surface | enum | No | road, trail, track, gravel |
+| Field          | Type   | Required? | Required for MVP? | Description                           |
+| -------------- | ------ | --------- | ----------------- | ------------------------------------- |
+| event_id       | string | Yes       | Yes               | Unique identifier                     |
+| name           | string | Yes       | Yes               | Event name                            |
+| date           | date   | Yes       | Yes               | Event date                            |
+| location       | string | No        | No                | City, region, country                 |
+| discipline     | enum   | Yes       | Yes               | running, cycling, swimming, triathlon |
+| distance       | float  | Yes       | Yes               | Distance in meters                    |
+| elevation_gain | float  | No        | Yes               | Elevation gain in meters              |
+| surface        | enum   | No        | No                | road, trail, track, gravel            |
 
 ### Data Sources
 
@@ -42,13 +42,13 @@ Which websites/APIs will you scrape?
 
 ### Athlete Entity Fields
 
-| Field | Type | Required? | Description |
-|-------|------|-----------|-------------|
-| athlete_id | string | Yes | Unique identifier |
-| name | string | Yes | Full name (may be anonymous) |
-| age | int | No | Age at time of race |
-| gender | enum | No | M, F, X |
-| hometown | string | No | Location |
+| Field      | Type   | Required? | Required for MVP? | Description                  |
+| ---------- | ------ | --------- | ----------------- | ---------------------------- |
+| athlete_id | string | Yes       | Yes               | Unique identifier            |
+| name       | string | Yes       | Yes               | Full name (may be anonymous) |
+| age        | int    | No        | No                | Age at time of race          |
+| gender     | enum   | No        | No                | M, F, X                      |
+| hometown   | string | No        | No                | Location                     |
 
 ### How do you identify athletes?
 - [x] By name
@@ -62,19 +62,19 @@ Which websites/APIs will you scrape?
 
 ### Result Entity Fields
 
-| Field | Type | Required? | Description |
-|-------|------|-----------|-------------|
-| result_id | string | Yes | Unique identifier |
-| race_id | string | Yes | Foreign key to race |
-| athlete_id | string | Yes | Foreign key to athlete |
-| position | int | Yes | Overall finish position |
-| gender | string | No | Gender (M/F/X)
-| age_group_lower | int | No | Age group, lower bound |
-| age_group_upper | int | No | Age group, upper bound |
-| division_position | int | No | Position within division |
-| finish_time | duration | Yes | Total time (HH:MM:SS) |
-| pace | float | No | Average pace (min/km) |
-| DNF/DNS | boolean | No | Did not finish/start |
+| Field             | Type     | Required? | Required for MVP? | Description              |
+| ----------------- | -------- | --------- | ----------------- | ------------------------ |
+| result_id         | string   | Yes       | Yes               | Unique identifier        |
+| race_id           | string   | Yes       | Yes               | Foreign key to race      |
+| athlete_id        | string   | Yes       | Yes               | Foreign key to athlete   |
+| position          | int      | Yes       | Yes               | Overall finish position  |
+| gender            | string   | No        | No                | Gender (M/F/X)           |
+| age_group_lower   | int      | No        | No                | Age group, lower bound   |
+| age_group_upper   | int      | No        | No                | Age group, upper bound   |
+| division_position | int      | No        | No                | Position within division |
+| finish_time       | duration | Yes       | Yes               | Total time (HH:MM:SS)    |
+| pace              | float    | No        | No                | Average pace (min/km)    |
+| DNF/DNS           | boolean  | No        | Yes               | Did not finish/start     |
 
 ### Missing Data Handling
 
@@ -97,13 +97,13 @@ What do you do when:
 
 ### Percentile Targets
 
-| Target | Example Use Case |
-|--------|------------------|
-| Top 1% | Elite qualifier |
-| Top 40% | Absolute best case |
+| Target  | Example Use Case                    |
+| ------- | ----------------------------------- |
+| Top 1%  | Elite qualifier                     |
+| Top 40% | Absolute best case                  |
 | Top 45% | Strong performance, top half finish |
-| Top 50% | Above average |
-| Top 55% | Solid performance |
+| Top 50% | Above average                       |
+| Top 55% | Solid performance                   |
 
 ### Reference Data Needed
 
