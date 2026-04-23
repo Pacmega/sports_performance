@@ -4,8 +4,8 @@ Based on my review of DATA_MODEL.md and SPEC.md, here's what's missing or undefi
 ## Critical Gaps
 | Gap                    | Status           | Impact                                                      |
 | ---------------------- | ---------------- | ----------------------------------------------------------- |
-| Target data source     | Not chosen       | Cannot build scraper - no URL/HTML to parse against         |
-| Technology stack       | Not specified    | No HTTP client, parsing library, or language tools decided  |
+| ~~Target data source~~ | ~~Not chosen~~   | ~~Cannot build scraper - no URL/HTML to parse against~~     |
+| ~~Technology stack~~   | ~~Not specified~~| ~~No HTTP client, parsing library, or language tools decided~~ |
 | ~~MVP schema~~         | ~~Not defined~~  | ~~All fields defined, but "minimum viable" subset unclear~~ |
 | ~~Sample HTML output~~ | ~~Not provided~~ | ~~No parsing target to develop logic against~~              |
 
