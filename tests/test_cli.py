@@ -1,15 +1,21 @@
 """Tests for CLI menu navigation."""
 
-import pytest
+from datetime import date
 from unittest.mock import patch
+
+import pytest
+
 from sports_performance.cli import (
-    show_main_menu,
-    show_scrape_menu,
-    show_analyze_menu,
+    ANALYZE_OPTIONS,
     MAIN_OPTIONS,
     SCRAPE_OPTIONS,
-    ANALYZE_OPTIONS,
+    _run_collect,
+    show_analyze_menu,
+    show_main_menu,
+    show_scrape_menu,
 )
+from sports_performance.models.race import Discipline, Race, RaceResult, RaceResultSet
+from sports_performance.scraper import ScraperError
 
 # --- Option list tests ---
 
@@ -74,12 +80,59 @@ def test_main_menu_routes_to_analyze_then_quits():
 # --- Scrape submenu ---
 
 
-def test_scrape_collect_prints_todo(capsys):
-    choices = iter(["Collect race results", "Back"])
-    show_scrape_menu(ask_fn=lambda _: next(choices))
-    captured = capsys.readouterr()
-    assert "[TODO]" in captured.out
-    assert "collect" in captured.out.lower()
+def _sample_result_set():
+    return RaceResultSet(
+        race=Race(
+            race_name="Test Race",
+            race_date=date(2025, 4, 27),
+            race_distance_km=50.0,
+            race_elevation_gain_m=600.0,
+            race_discipline=Discipline.TRAIL_RUNNING,
+        ),
+        results=[RaceResult(position=1, athlete_name="Alice", finish_time="04:12:33")],
+    )
+
+
+def test_run_collect_happy_path(tmp_path):
+    messages = []
+    with (
+        patch("sports_performance.cli.fetch_results", return_value=_sample_result_set()),
+        patch(
+            "sports_performance.cli.save_results", return_value=tmp_path / "out.csv"
+        ) as mock_save,
+    ):
+        _run_collect(
+            ask_url_fn=lambda: "https://my.raceresult.com/370985/results#1_DDA59F",
+            output_fn=messages.append,
+        )
+    assert any("Saved" in m and "1 results" in m for m in messages)
+    mock_save.assert_called_once()
+
+
+def test_run_collect_invalid_url_prints_error():
+    messages = []
+    _run_collect(
+        ask_url_fn=lambda: "https://not-a-valid-url.com/foo",
+        output_fn=messages.append,
+    )
+    assert any("Invalid URL" in m for m in messages)
+
+
+def test_run_collect_scraper_error_prints_error():
+    messages = []
+    with patch("sports_performance.cli.fetch_results", side_effect=ScraperError("timeout")):
+        _run_collect(
+            ask_url_fn=lambda: "https://my.raceresult.com/370985/results#1_DDA59F",
+            output_fn=messages.append,
+        )
+    assert any("Scraper error" in m for m in messages)
+
+
+def test_scrape_collect_calls_run_collect():
+    with patch("sports_performance.cli._run_collect") as mock_collect:
+        choices = iter(["Collect race results", "Back"])
+        show_scrape_menu(ask_fn=lambda _: next(choices))
+    mock_collect.assert_called_once()
 
 
 def test_scrape_list_prints_todo(capsys):

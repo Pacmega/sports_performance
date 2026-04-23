@@ -64,3 +64,4 @@ venv.bak/
 Thumbs.db
 
 example_data/
+data/

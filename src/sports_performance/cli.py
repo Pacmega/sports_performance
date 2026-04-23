@@ -1,7 +1,25 @@
 """Sports performance analysis CLI."""
 
-import typer
+from pathlib import Path
+
 import questionary
+import typer
+from questionary.prompts.common import InquirerControl
+
+from sports_performance.scraper import (
+    ScraperError,
+    fetch_results,
+    parse_raceresult_url,
+    save_results,
+)
+
+# Disable cursor wrap-around in all select prompts: clamp to first/last item.
+InquirerControl.select_next = lambda self: setattr(
+    self, "pointed_at", min(self.pointed_at + 1, self.choice_count - 1)
+)
+InquirerControl.select_previous = lambda self: setattr(
+    self, "pointed_at", max(self.pointed_at - 1, 0)
+)
 
 app = typer.Typer(help="Sports performance analysis CLI.")
 
@@ -16,6 +34,26 @@ SCRAPE_OPTIONS = [
 ANALYZE_OPTIONS = ["Percentile ranking", "Target finishing time", "Back", "Quit"]
 
 
+def _run_collect(ask_url_fn=None, output_fn=None) -> None:
+    ask_url_fn = ask_url_fn or (
+        lambda: questionary.text("Paste race URL (browser or API URL):").ask()
+    )
+    output_fn = output_fn or typer.echo
+    url = ask_url_fn()
+    try:
+        race_id, contest_num, key = parse_raceresult_url(url)
+    except ValueError as exc:
+        output_fn(f"Invalid URL: {exc}")
+        return
+    try:
+        result_set = fetch_results(race_id, contest_num, key=key)
+    except ScraperError as exc:
+        output_fn(f"Scraper error: {exc}")
+        return
+    path = save_results(result_set, Path.cwd() / "data")
+    output_fn(f"Saved {len(result_set.results)} results to {path}")
+
+
 def _default_scrape_ask(choices):
     return questionary.select("Scrape:", choices=choices).ask()
 
@@ -26,7 +64,7 @@ def show_scrape_menu(ask_fn=None) -> None:
     while True:
         choice = ask_fn(SCRAPE_OPTIONS)
         if choice == "Collect race results":
-            typer.echo("[TODO] scrape collect: not yet implemented.")
+            _run_collect()
         elif choice == "List stored races":
             typer.echo("[TODO] scrape list: not yet implemented.")
         elif choice == "Delete stored race data":
